@@ -3,7 +3,7 @@ const bodyParser = require('body-parser')
 api = express();
 require('dotenv').config();
 
-const authRoute = require('./routes/auth')
+const authRouter = require('./routes/auth')
 
 api.use(bodyParser.json());
 
@@ -14,4 +14,4 @@ api.listen(process.env.PORT || 5000, () =>{
 })
 
 
-api.use('/', authRoute )
+api.use('/auth', authRouter )
