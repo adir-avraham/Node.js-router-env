@@ -1,7 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser')
 api = express();
-require('dotenv').config();
 
 const authRouter = require('./routes/auth')
 
@@ -15,3 +15,7 @@ api.listen(process.env.PORT || 5000, () =>{
 
 
 api.use('/auth', authRouter )
+
+
+
+api.use('/flights', authRouter)

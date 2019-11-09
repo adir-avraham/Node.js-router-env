@@ -1,11 +1,9 @@
 const express = require('express')
+const router = express.Router();
+const moment = require('moment')
+const users = {};
+const flightsRouter = require('./flights')
 
-const  router = express.Router();
-const fs = require('fs');
-const data = fs.readFileSync('users.json');
-const users = JSON.parse(data);
-
-const writeToFile = require('../writeToFile')
 
 
 router.use('/Register', (req, res, next) =>{
@@ -14,17 +12,45 @@ router.use('/Register', (req, res, next) =>{
         res.send("Some value is missing...")
     }
     if (!email.includes("@")) return res.send("Email address is not valid");
-    isUserExist = users.find((user) => {return user.userName === userName});
-    if (isUserExist) return res.send("User is already exist") 
+
     next()
 })
 
+
 router.post('/Register', (req, res, next) =>{
-    const { userName, email, password, firstName, lastName } = req.body;
-    users.push({ userName, email, password, firstName, lastName })
-    writeToFile.writeToFile('users.json', users )
-    res.send("Register success")
+    
+    const apiKey = getApiKey()
+    const expiration = moment().format('x')
+    
+    users[apiKey] = expiration
+    
+    console.log(users)
+
+
+    res.send(`Register success - your key is ${apiKey}`)
+
 })
+
+
+function getApiKey() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+router.use('/flights', (req, res, next)=>{
+    const {key} = req.query;
+    const timeStamp = moment().format('x')
+    if (!users[key]) return res.status(401).send("Unauthorized user")
+    if (timeStamp - 60000 > users[key]) {
+      delete users[key];
+      return res.send("your key is expierd")
+    } 
+    next()
+})
+
+router.get('/flights', flightsRouter )
 
 
 module.exports = router;
