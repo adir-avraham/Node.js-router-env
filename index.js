@@ -3,8 +3,6 @@ const express = require('express');
 const bodyParser = require('body-parser')
 api = express();
 const validateKey = require('./validateKey')
-const moment = require("moment");
-const users = require('./users')
 const authRouter = require('./routes/auth')
 const flightsRoute = require('./routes/flights')
 

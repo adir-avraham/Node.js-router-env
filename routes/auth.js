@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const moment = require("moment");
 const users = require('../users')
-const flightsRouter = require("./flights");
 const logger = require("../utils/logger");
 
 router.use("/Register", (req, res, next) => {
@@ -33,7 +32,5 @@ function getApiKey() {
 }
 
 
-
-//router.get("/flights", flightsRouter);
 
 module.exports = router;
